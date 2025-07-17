@@ -71,3 +71,5 @@ dist/
 .DS_Store
 Thumbs.db
 
+# cline_rules
+.cline_rules
