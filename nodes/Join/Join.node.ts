@@ -99,6 +99,7 @@ export class Join implements INodeType {
 			} catch (error) {
 				// Fallback to execution order if pairedItem is not available
 				sourceIdentifier = `source_${storage.inputs.length}`;
+				console.error('Error determining source identifier:', error);  
 			}
 
 			// Add current input data to storage with source identifier
