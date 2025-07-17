@@ -1,0 +1,97 @@
+name: Build and deploy Join custom node for n8n
+
+on:
+  push:
+    branches:
+      - "development"
+      #- "feature/**"
+      #- "bug/**"
+  pull_request:
+    branches:
+      - "development"
+  release:
+    types: [published]
+
+jobs:
+  lint-and-build:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'release' && github.event_name != 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Lint code
+      run: npm run lint
+      
+    - name: Build project
+      run: npm run build
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    environment: staging
+    
+    steps:
+    - name: Checkout PR code
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Setup SSH
+      run: |
+        eval $(ssh-agent -s)
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-add ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.STAGING_HOST }} >> ~/.ssh/known_hosts
+        
+    - name: Deploy to Staging
+      run: npm run deploy:staging
+      env:
+        STAGING_DEPLOY_USER: ${{ secrets.STAGING_USER }}
+        STAGING_DEPLOY_HOST: ${{ secrets.STAGING_HOST }}
+        STAGING_DEPLOY_PATH: ${{ secrets.STAGING_PATH }}
+        STAGING_DEPLOY_CONTAINER: ${{ secrets.STAGING_CONTAINER_NAME }}
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Deploy to Production
+      run: npm run deploy:production
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

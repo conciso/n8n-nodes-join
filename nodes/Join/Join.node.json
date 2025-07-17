@@ -1,0 +1,13 @@
+{
+	"node": "n8n-nodes-base.Join",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Development", "Utility"],
+	"resources": {
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/conciso/n8n-nodes-join?tab=readme-ov-file#-n8n-nodes-join"
+			}
+		]
+	}
+}

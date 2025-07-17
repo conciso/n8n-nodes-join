@@ -1,0 +1,50 @@
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="30" cy="30" r="28" fill="#4A90E2" stroke="#2E5C8A" stroke-width="2"/>
+  
+  <!-- Multiple input lines converging to center -->
+  <g stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round">
+    <!-- Top input -->
+    <line x1="30" y1="8" x2="30" y2="20"/>
+    <circle cx="30" cy="8" r="2" fill="#FFFFFF"/>
+    
+    <!-- Top-right input -->
+    <line x1="45" y1="15" x2="37" y2="23"/>
+    <circle cx="45" cy="15" r="2" fill="#FFFFFF"/>
+    
+    <!-- Right input -->
+    <line x1="52" y1="30" x2="40" y2="30"/>
+    <circle cx="52" cy="30" r="2" fill="#FFFFFF"/>
+    
+    <!-- Bottom-right input -->
+    <line x1="45" y1="45" x2="37" y2="37"/>
+    <circle cx="45" cy="45" r="2" fill="#FFFFFF"/>
+    
+    <!-- Bottom input -->
+    <line x1="30" y1="52" x2="30" y2="40"/>
+    <circle cx="30" cy="52" r="2" fill="#FFFFFF"/>
+    
+    <!-- Bottom-left input -->
+    <line x1="15" y1="45" x2="23" y2="37"/>
+    <circle cx="15" cy="45" r="2" fill="#FFFFFF"/>
+    
+    <!-- Left input -->
+    <line x1="8" y1="30" x2="20" y2="30"/>
+    <circle cx="8" cy="30" r="2" fill="#FFFFFF"/>
+    
+    <!-- Top-left input -->
+    <line x1="15" y1="15" x2="23" y2="23"/>
+    <circle cx="15" cy="15" r="2" fill="#FFFFFF"/>
+  </g>
+  
+  <!-- Central join point -->
+  <circle cx="30" cy="30" r="8" fill="#FFFFFF" stroke="#4A90E2" stroke-width="2"/>
+  
+  <!-- Join symbol in center -->
+  <g fill="#4A90E2">
+    <!-- Horizontal line -->
+    <rect x="25" y="29" width="10" height="2" rx="1"/>
+    <!-- Vertical line -->
+    <rect x="29" y="25" width="2" height="10" rx="1"/>
+  </g>
+</svg>

@@ -1,0 +1,66 @@
+{
+  "name": "@conciso/n8n-nodes-join",
+  "version": "1.1.0",
+  "description": "n8n node for joining parallel workflow branches into a single JSON object",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "n8n-community-node-package",
+    "join",
+    "merge",
+    "parallel",
+    "workflow"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/conciso/n8n-nodes-join#readme",
+  "author": {
+    "name": "Thorsten Kamann",
+    "email": "thorsten.kamann@conciso.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/conciso/n8n-nodes-join.git",
+    "homepage": "https://github.com/conciso/n8n-nodes-join#readme"
+  },
+  "engines": {
+    "node": ">=20.15"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp build",
+    "dev": "gulp dev",
+    "deploy:production": "gulp lint && gulp deployProduction",
+    "deploy:staging": "gulp lint && gulp deployStaging",
+    "lint": "gulp lint",
+    "clean": "gulp clean",
+    "init": "gulp init",
+    "release": "gulp releaseMinor",
+    "release:patch": "gulp releasePatch",
+    "release:minor": "gulp releaseMinor",
+    "release:major": "gulp releaseMajor"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "nodes": [
+      "dist/nodes/Join/Join.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "@typescript-eslint/parser": "~8.34.1",
+    "dotenv": "^17.0.1",
+    "eslint": "^8.57.1",
+    "eslint-plugin-n8n-nodes-base": "^1.16.3",
+    "gulp": "^5.0.0",
+    "gulp-prettier": "^6.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}
