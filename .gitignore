@@ -71,5 +71,3 @@ dist/
 .DS_Store
 Thumbs.db
 
-# Package lock files (we use npm)
-package-lock.json
