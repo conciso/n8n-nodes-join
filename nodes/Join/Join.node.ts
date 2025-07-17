@@ -88,7 +88,10 @@ export class Join implements INodeType {
 
 			// Add current input data to storage
 			storage.inputs.push({
-				data: items[0].json, // Take first item from this execution
+				data:
+					items.length === 1
+						? items[0].json // Single element directly
+						: items.map((item) => item.json), // Array of JSON objects
 				timestamp: new Date().toISOString(),
 				executionIndex: storage.inputs.length + 1,
 				nodeName: finalNodeName,
@@ -128,6 +131,8 @@ export class Join implements INodeType {
 						timestamp: input.timestamp,
 						executionIndex: input.executionIndex,
 						receivedAt: input.timestamp,
+						itemCount: Array.isArray(input.data) ? input.data.length : 1,
+						isArray: Array.isArray(input.data),
 					};
 				}
 			}
