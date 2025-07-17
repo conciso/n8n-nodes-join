@@ -36,7 +36,7 @@ export class Join implements INodeType {
 				},
 			},
 			{
-				displayName: 'Timeout (seconds)',
+				displayName: 'Timeout (Seconds)',
 				name: 'timeout',
 				type: 'number',
 				default: 30,
