@@ -164,9 +164,6 @@ cd n8n-nodes-join
 # Install dependencies
 npm run init
 
-# Build the project
-npm run build
-
 # Build and run in dev mode
 npm run dev
 ```
@@ -180,23 +177,23 @@ n8n-nodes-join/
 │       ├── Join.node.ts      # Main node implementation
 │       ├── Join.node.json    # Node metadata
 │       └── join.svg          # Node icon
-├── dist/                     # Compiled output
+├── dist/  
+├── test/                    # Test files
 ├── gulpfile.js              # Build system
 └── package.json             # Package configuration
 ```
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
+Contributions are welcome!
 
 ### Development Workflow
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Run tests: `npm run lint`
-5. Build: `npm run build`
-6. Submit a pull request
+4. Run build and tests: `npm run build:test`
+5. Submit a pull request
 
 ## 🐛 Troubleshooting
 
