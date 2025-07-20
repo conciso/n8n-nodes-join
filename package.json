@@ -29,6 +29,7 @@
   "main": "index.js",
   "scripts": {
     "build": "gulp build",
+    "build:test": "gulp buildWithTests",
     "dev": "gulp dev",
     "deploy:production": "gulp lint && gulp deployProduction",
     "deploy:staging": "gulp lint && gulp deployStaging",
@@ -39,9 +40,9 @@
     "release:patch": "gulp releasePatch",
     "release:minor": "gulp releaseMinor",
     "release:major": "gulp releaseMajor",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test": "gulp test",
+    "test:watch": "gulp testWatch",
+    "test:coverage": "gulp testCoverage"
   },
   "files": [
     "dist"
@@ -62,6 +63,7 @@
     "gulp": "^5.0.0",
     "gulp-prettier": "^6.0.0",
     "jest": "^29.7.0",
+    "jest-junit": "^16.0.0",
     "jest-mock-extended": "^3.0.7",
     "prettier": "^3.5.3",
     "ts-jest": "^29.4.0",

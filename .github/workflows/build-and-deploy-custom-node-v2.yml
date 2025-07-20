@@ -34,7 +34,37 @@ jobs:
       run: npm run lint
       
     - name: Build project
-      run: npm run build
+      run: npm run build:test
+
+    - name: Run tests with coverage
+      run: npm run test:coverage
+      
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+      continue-on-error: true
+
+    - name: Upload test results
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Jest Tests
+        path: coverage/junit.xml
+        reporter: jest-junit
+        fail-on-error: false
+      continue-on-error: true
+
+    - name: Upload coverage as artifact
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-report
+        path: coverage/
+        retention-days: 30
 
   deploy-staging:
     runs-on: ubuntu-latest
@@ -55,6 +85,35 @@ jobs:
         
     - name: Install dependencies
       run: npm ci
+      
+    - name: Run tests with coverage
+      run: npm run test:coverage
+      
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage/lcov.info
+        flags: staging
+        name: staging-tests
+        fail_ci_if_error: false
+      continue-on-error: true
+
+    - name: Upload test results
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Staging Tests
+        path: coverage/junit.xml
+        reporter: jest-junit
+        fail-on-error: true
+
+    - name: Upload coverage as artifact
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: staging-coverage-report
+        path: coverage/
+        retention-days: 7
       
     - name: Setup SSH
       run: |
@@ -90,6 +149,35 @@ jobs:
         
     - name: Install dependencies
       run: npm ci
+      
+    - name: Run tests with coverage
+      run: npm run test:coverage
+      
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage/lcov.info
+        flags: production
+        name: production-tests
+        fail_ci_if_error: false
+      continue-on-error: true
+
+    - name: Upload test results
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Production Tests
+        path: coverage/junit.xml
+        reporter: jest-junit
+        fail-on-error: true
+
+    - name: Upload coverage as artifact
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: production-coverage-report
+        path: coverage/
+        retention-days: 90
       
     - name: Deploy to Production
       run: npm run deploy:production
