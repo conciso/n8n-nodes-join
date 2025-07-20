@@ -71,5 +71,6 @@ dist/
 .DS_Store
 Thumbs.db
 
-# cline_rules
+# rules
 .cline_rules
+.github/chatmodes/
