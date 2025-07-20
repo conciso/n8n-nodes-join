@@ -72,6 +72,31 @@ function format(done) {
     });
 }
 
+// Helper for running Jest
+function runJest(args, onSuccessMsg, onErrorMsg, done) {
+    const jest = spawn('npx', ['jest', ...args], { stdio: 'inherit' });
+    jest.on('close', (code) => {
+        if (code === 0) {
+            if (onSuccessMsg) console.log(onSuccessMsg);
+            done();
+        } else {
+            done(new Error(onErrorMsg));
+        }
+    });
+}
+
+// Test
+function test(done) {
+    console.log('🧪 Running tests...');
+    runJest(['--coverage'], '✅ All tests passed', 'Tests failed', done);
+}
+
+// Test in watch mode
+function testWatch(done) {
+    console.log('🧪 Running tests in watch mode...');
+    runJest(['--watch'], null, 'Test watch failed', done);
+}
+
 // Stop n8n
 function stopN8n(done) {
     exec('pkill -f "n8n start"', () => {
@@ -248,26 +273,37 @@ const build = series(
     typescript,
     format 
 );
+
+const buildWithTests = series(
+    copyAssets,
+    typescript,
+    format,
+    test
+);
+
 const dev = series(build, stopN8n, startN8n);
 const init = series(cleanAll, install);
 const deployStaging = series(
     clean,
-    build,
+    buildWithTests,
     createDeployTask('staging'),
     createRestartTask('staging')
 );
 
 const deployProduction = series(
     clean,
-    build,
+    buildWithTests,
     publishToNpm
 );
 
 // Exports
 exports.lint = lint;
 exports.format = format;
+exports.test = test;
+exports.testWatch = testWatch;
 exports.clean = clean;
 exports.build = build;
+exports.buildWithTests = buildWithTests;
 exports.dev = dev;
 exports.deployStaging = deployStaging;
 exports.deployProduction = deployProduction;

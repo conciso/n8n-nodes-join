@@ -7,7 +7,7 @@ import {
 } from 'n8n-workflow';
 
 // Global storage for collecting data across multiple executions
-const globalDataStore: { [workflowId: string]: { [nodeId: string]: any } } = {};
+export const globalDataStore: { [workflowId: string]: { [nodeId: string]: any } } = {};
 
 export class Join implements INodeType {
 	description: INodeTypeDescription = {
@@ -82,16 +82,35 @@ export class Join implements INodeType {
 
 			const storage = globalDataStore[storageKey];
 
-			// For now, use simple input_x naming since n8n API access to node names is very limited
-			// This could be enhanced in the future with better workflow introspection
-			let finalNodeName = `input_${storage.inputs.length + 1}`;
+			// Try to get a deterministic identifier for the source node
+			let sourceIdentifier = 'unknown';
+			try {
+				// Try to get source information from pairedItem
+				const firstItem = items[0];
+				if (firstItem.pairedItem) {
+					if (Array.isArray(firstItem.pairedItem)) {
+						sourceIdentifier = `source_${firstItem.pairedItem[0].item || 0}`;
+					} else if (typeof firstItem.pairedItem === 'object' && 'item' in firstItem.pairedItem) {
+						sourceIdentifier = `source_${firstItem.pairedItem.item || 0}`;
+					} else {
+						sourceIdentifier = `source_${firstItem.pairedItem}`;
+					}
+				}
+			} catch (error) {
+				// Fallback to execution order if pairedItem is not available
+				sourceIdentifier = `source_${storage.inputs.length}`;
+				console.error('Error determining source identifier:', error);
+			}
 
-			// Add current input data to storage
+			// Add current input data to storage with source identifier
 			storage.inputs.push({
-				data: items[0].json, // Take first item from this execution
+				data:
+					items.length === 1
+						? items[0].json // Single element directly
+						: items.map((item) => item.json), // Array of JSON objects
 				timestamp: new Date().toISOString(),
 				executionIndex: storage.inputs.length + 1,
-				nodeName: finalNodeName,
+				sourceIdentifier: sourceIdentifier,
 			});
 
 			// Check if we have all expected inputs
@@ -112,13 +131,18 @@ export class Join implements INodeType {
 				return [[]];
 			}
 
-			// All inputs received! Process and combine data
+			// All inputs received! Sort inputs deterministically for consistent output
+			const sortedInputs = storage.inputs.sort((a: any, b: any) => {
+				// Sort by sourceIdentifier for consistent ordering
+				return a.sourceIdentifier.localeCompare(b.sourceIdentifier);
+			});
+
 			const combinedData: { [key: string]: any } = {};
 			const metadata: { [key: string]: any } = {};
 
-			// Process all collected inputs
-			for (let i = 0; i < storage.inputs.length; i++) {
-				const input = storage.inputs[i];
+			// Process all collected inputs in sorted order
+			for (let i = 0; i < sortedInputs.length; i++) {
+				const input = sortedInputs[i];
 				const label = `input_${i + 1}`;
 
 				combinedData[label] = input.data;
@@ -128,6 +152,9 @@ export class Join implements INodeType {
 						timestamp: input.timestamp,
 						executionIndex: input.executionIndex,
 						receivedAt: input.timestamp,
+						sourceIdentifier: input.sourceIdentifier,
+						itemCount: Array.isArray(input.data) ? input.data.length : 1,
+						isArray: Array.isArray(input.data),
 					};
 				}
 			}
