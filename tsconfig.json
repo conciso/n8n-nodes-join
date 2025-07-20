@@ -22,7 +22,8 @@
   },
   "include": [
     "nodes/**/*",
-    "credentials/**/*"
+    "credentials/**/*",
+    "test/**/*"
   ],
   "exclude": [
     "dist/**/*",
