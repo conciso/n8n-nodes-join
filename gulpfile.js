@@ -88,13 +88,7 @@ function runJest(args, onSuccessMsg, onErrorMsg, done) {
 // Test
 function test(done) {
     console.log('🧪 Running tests...');
-    runJest([], '✅ All tests passed', 'Tests failed', done);
-}
-
-// Test with coverage
-function testCoverage(done) {
-    console.log('🧪 Running tests with coverage...');
-    runJest(['--coverage'], '✅ All tests passed with coverage generated', 'Tests failed', done);
+    runJest(['--coverage'], '✅ All tests passed', 'Tests failed', done);
 }
 
 // Test in watch mode
@@ -284,8 +278,7 @@ const buildWithTests = series(
     copyAssets,
     typescript,
     format,
-    test,
-    testCoverage
+    test
 );
 
 const dev = series(build, stopN8n, startN8n);
@@ -307,7 +300,6 @@ const deployProduction = series(
 exports.lint = lint;
 exports.format = format;
 exports.test = test;
-exports.testCoverage = testCoverage;
 exports.testWatch = testWatch;
 exports.clean = clean;
 exports.build = build;

@@ -41,8 +41,7 @@
     "release:minor": "gulp releaseMinor",
     "release:major": "gulp releaseMajor",
     "test": "gulp test",
-    "test:watch": "gulp testWatch",
-    "test:coverage": "gulp testCoverage"
+    "test:watch": "gulp testWatch"
   },
   "files": [
     "dist"
